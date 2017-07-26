@@ -11,12 +11,12 @@ public class StringQueue {
 		stringQueue = new ArrayList<String>();
 	}
 	
-	public void offerToStringQueue(String input) {
+	public void pushToStringQueue(String input) {
 		stringQueue.add(input);
 	}
 	
-	public String peekFromStringQueue() {
-		return stringQueue.remove(stringQueue.size()-1);
+	public String popFromStringQueue() {
+		return stringQueue.remove(0);
 	}
 	
 	public void printStringQueue() {
@@ -26,5 +26,4 @@ public class StringQueue {
 		}
 		System.out.println("StringQueue Printed.");
 	}
-	
 }
