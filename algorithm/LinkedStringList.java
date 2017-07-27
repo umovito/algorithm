@@ -94,6 +94,7 @@ public class LinkedStringList {
 			while(searchNode.next != tail) {
 				searchNode = searchNode.next;
 			}
+			searchNode.next = null;
 			tail = searchNode;
 		}
 		size--;
@@ -133,11 +134,9 @@ public class LinkedStringList {
 	
 	public void print() {
 		StringNode printNode = head;
-		for(int i=0; i<size; i++) {
+		while(printNode != null) {
 			System.out.println(printNode.print());
-			if (printNode.next != null) {
-				printNode = printNode.next;
-			}
+			printNode = printNode.next;
 		}
 	}
 }
