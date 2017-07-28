@@ -3,13 +3,13 @@ package algorithm;
 public class LinkedStringList {
 	
 	private StringNode head;
-	private StringNode tail;
 	private int size;
 	
 	private class StringNode {
 		
 		private String value;
 		private StringNode next;
+		private StringNode prev;
 		
 		public StringNode(String value) {
 			this.value = value;
@@ -26,23 +26,18 @@ public class LinkedStringList {
 	
 	public void addToFirst(String value) {
 		StringNode newNode = new StringNode(value);
+		if(size == 0) {
+			head = newNode;
+		}
 		newNode.next = head;
+		head.prev = newNode;
+		StringNode searchNode = head;
+		for(int i=0; i<size-1; i++) {
+			searchNode = searchNode.next;
+		}
+		searchNode.next = newNode;
+		newNode.prev = searchNode;
 		head = newNode;
-		if(size == 0) {
-			tail = head;
-		}
-		size++;
-	}
-	
-	public void addToLast(String value) {
-		StringNode newNode = new StringNode(value);
-		if (tail != null) {
-			tail.next = newNode;
-		}
-		tail = newNode;
-		if(size == 0) {
-			head = tail;
-		}
 		size++;
 	}
 	
@@ -56,14 +51,13 @@ public class LinkedStringList {
 			if (index == 0) {
 				addToFirst(value);
 			}
-			else if (index == size) {
-				addToLast(value);
-			}
 			else {
 				for(int i=0; i<index-1; i++) {
 					searchNode = searchNode.next;
 				}
+				searchNode.next.prev = newNode;
 				newNode.next = searchNode.next;
+				newNode.prev = searchNode;
 				searchNode.next = newNode;
 				size++;
 			}
@@ -71,71 +65,45 @@ public class LinkedStringList {
 	}
 	
 	public String removeFirst() {
-		String ret = head.value;
-		if (head.next != null) {
-			head = head.next;
+		StringNode removingNode = head;
+		if (size > 0) {
+			head.prev.next = head.next;
+			head.next.prev = head.prev;
+			head = removingNode.next;
 		}
 		else {
 			head = null;
-			tail = null;
-		}
+		}			
 		size--;
-		return ret;
-	}
-	
-	public String removeLast() {
-		String ret = tail.value;
-		StringNode searchNode = head;
-		if(searchNode.next == null) {
-			tail = null;
-			head = null;
-		}
-		else {
-			while(searchNode.next != tail) {
-				searchNode = searchNode.next;
-			}
-			searchNode.next = null;
-			tail = searchNode;
-		}
-		size--;
-		return ret;
+		return removingNode.value;
 	}
 	
 	public String removeFrom(int index) {
-		if(index > size) {
+		if(index > size || index < 0) {
 			return "nothing to remove";
 		}
 		else {
-			if(index == 0) {
+			if(index == 0 || size == 0) {
 				return removeFirst();
-			}
-			else if(index == size-1) {
-				return removeLast();
 			}
 			else {
 				StringNode searchNode = head;
-				for(int i=0; i<index-1; i++) {
+				for(int i=0; i<index; i++) {
 					searchNode = searchNode.next;
 				}
-				StringNode removingNode = searchNode.next;
-				String ret = removingNode.value;
-				if (removingNode.next != null) {
-					searchNode.next = removingNode.next;
-				}
-				else {
-					searchNode.next = null;
-				}
-				removingNode = null;
+				StringNode removingNode = searchNode;
+				searchNode.prev.next = searchNode.next;
+				searchNode.next.prev = searchNode.prev;
 				size--;
-				return ret;
+				return removingNode.value;
 			}
 		}
 	}
 	
 	public void print() {
 		StringNode printNode = head;
-		while(printNode != null) {
-			System.out.println(printNode.print());
+		for(int i=0; i<size; i++) {
+			System.out.println(printNode.value);
 			printNode = printNode.next;
 		}
 	}
